@@ -34,8 +34,8 @@ class Graph
         WriteMatrix("Матриця сумiжностi", MatrixAdj);
 
         int [,] MatrixDistance = CreateDistanceMatrix(MatrixAdj);
-        WriteMatrix("Матриця вiдстаней D(G)", MatrixAdj);
         FindRDC(MatrixDistance, V);
+        WriteMatrix("Матриця вiдстаней D(G)", MatrixAdj);
         Console.ReadKey();
 
     }
@@ -108,39 +108,40 @@ class Graph
     static void FindRDC(int[,] MatrixDistance, int[] V)
     {
         int n = V.Length;
-        int center;
         int radius = n;
-        int e;
+        int maxE;
         int diametr = 0;
         Console.Write("C(G) - {");
         for (int i = 0; i < MatrixDistance.GetLength(0); i++)
         {
-            e = MatrixDistance[i,0];
+            maxE = MatrixDistance[i,0];
             for (int j = 0; j < MatrixDistance.GetLength(1); j++)
             {
                 if (diametr <= MatrixDistance[i, j])
                 {
                     diametr = MatrixDistance[i, j];
                 }
-                if (e< MatrixDistance[i, j] && MatrixDistance[i, j] > 1)
+                if (maxE< MatrixDistance[i, j] )
                 {
-                    e = MatrixDistance[i, j];
+                    maxE = MatrixDistance[i, j];
                 }  
             }
-            if (e < radius) { radius = e; }
+            if (maxE < radius) { radius = maxE; }
         }
 
         for(int i = 0;i < MatrixDistance.GetLength(0); i++)
         {
-            center =0;
+
+            maxE = MatrixDistance[i, 0];
             for (int j = 0; j < MatrixDistance.GetLength(1); j++)
             {
-                if (MatrixDistance[i, j] <= radius)
+              
+                if (maxE < MatrixDistance[i, j])
                 {
-                    center++;
+                    maxE = MatrixDistance[i, j];
                 }
             }
-            if (center == n)
+            if (radius == maxE)
             {
                 Console.Write(V[i] + " ");
             }
