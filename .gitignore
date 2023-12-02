@@ -1,5 +1,7 @@
 /bin/Debug/net6.0
 /obj/Debug/net6.0
+/.vs/DM1/v17
 *.sqlite
 *.wsuo
 *.vsidx
+*.cache

@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\sarab\\source\\repos\\DM1\\DM1.csproj",
+      "projectUniqueName": "C:\\Users\\sarab\\OneDrive\\Документи\\SmartGit\\DM2\\DM1.csproj",
       "projectName": "DM1",
-      "projectPath": "C:\\Users\\sarab\\source\\repos\\DM1\\DM1.csproj",
+      "projectPath": "C:\\Users\\sarab\\OneDrive\\Документи\\SmartGit\\DM2\\DM1.csproj",
       "packagesPath": "C:\\Users\\sarab\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\sarab\\source\\repos\\DM1\\obj\\",
+      "outputPath": "C:\\Users\\sarab\\OneDrive\\Документи\\SmartGit\\DM2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
