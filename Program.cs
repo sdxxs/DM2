@@ -36,9 +36,12 @@ class Graph
 
         WriteMatrix("Матриця сумiжностi", MatrixAdj);
 
-        int[,] MatrixDistance = CreateDistanceMatrix(MatrixAdj);
-        FindRDC(MatrixDistance, V);
-        WriteMatrix("Матриця вiдстаней D(G)", MatrixAdj);
+        // int[,] MatrixDistance = CreateDistanceMatrix(MatrixAdj);
+        // FindRDC(MatrixDistance, V);
+        // WriteMatrix("Матриця вiдстаней D(G)", MatrixAdj);
+
+        int[,] D = ReachabilityMatrix(MatrixAdj);
+        WriteMatrix("Матриця досяжностi D", D);
 
         Console.ReadKey();
     }
@@ -168,34 +171,60 @@ class Graph
         }
     }
 
-    static int[,] MultiplySquareMatrix(int[,] matrix)
+    static int[,] ReachabilityMatrix(int[,] A)
     /*Множення матриці саму на себе n-1 разів*/
     {
-        int n = matrix.GetLength(0);
+        int n = A.GetLength(0);
         int[,] result = new int[n, n];
         int[,] term = new int[n, n];
+        int[,] I = new int[n, n];
+        int[,] D = new int[n, n];
+        int sum;
 
-        // Copy the original matrix to 'term'
-        Array.Copy(matrix, term, matrix.Length);
+        // Створення одиничної матриці з розмірністю n
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (i == j)
+                {
+                    I[i, j] = 1;
+                }
+            }
+        }
+        Array.Copy(I, D, I.Length);  // Копіюємо одиничну матрицю в 
+        Array.Copy(A, result, A.Length);
+        Array.Copy(A, term, A.Length);
+
         for (int c = 1; c < n - 1; c++)
         {
+            // Після кожного перемножання матриці A саму на себе, додаємо її до матриці досяжності D
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < n; j++)
                 {
-                    int sum = 0;
+                    if (D[i, j] + result[i, j] != 0)
+                    {
+                        D[i, j] = 1;
+                    }
+                }
+            }
+
+            // Множення матриці A саму на себе
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    sum = 0;
                     for (int k = 0; k < n; k++)
                     {
-                        sum += term[i, k] * matrix[k, j];
+                        sum += term[i, k] * A[k, j];
                     }
                     result[i, j] = sum;
-
                 }
             }
             Array.Copy(result, term, result.Length);
         }
-
-        return result;
+        return D;
     }
-
 }
