@@ -36,9 +36,11 @@ class Graph
 
         WriteMatrix("Матриця сумiжностi", MatrixAdj);
 
-        // int[,] MatrixDistance = CreateDistanceMatrix(MatrixAdj);
-        // FindRDC(MatrixDistance, V);
-        // WriteMatrix("Матриця вiдстаней D(G)", MatrixAdj);
+        int[,] MatrixDistance = CreateDistanceMatrix(MatrixAdj,type);
+
+        FindRDC(MatrixDistance,V,type);
+
+        WriteMatrix("Матриця вiдстаней R", MatrixAdj);
 
         int[,] D = ReachabilityMatrix(MatrixAdj);
         WriteMatrix("Матриця досяжностi D", D);
@@ -81,27 +83,31 @@ class Graph
 
         return MatrixAdj;
     }
-    static int[,] CreateDistanceMatrix(int[,] MatrixAdj)
+    static int[,] CreateDistanceMatrix(int[,] MatrixAdj, char type)
     {
-
+        
         int[,] MatrixDistance = MatrixAdj;
         int distance = 1;
-        for (int r = 0; r < 3; r++)
+        if (type == '-')
         {
-            for (int i = 0; i < MatrixDistance.GetLength(0); i++)
+
+            for (int r = 0; r < 3; r++)
             {
-                for (int j = 0; j < MatrixDistance.GetLength(1); j++)
+                for (int i = 0; i < MatrixDistance.GetLength(0); i++)
                 {
-                    if (MatrixDistance[i, j] == 1)
+                    for (int j = 0; j < MatrixDistance.GetLength(1); j++)
                     {
-                        for (int k = 0; k < MatrixDistance.GetLength(1); k++)
+                        if (MatrixDistance[i, j] == 1)
                         {
-                            if (MatrixDistance[j, k] > 0)
+                            for (int k = 0; k < MatrixDistance.GetLength(1); k++)
                             {
-                                distance = MatrixDistance[j, k] + 1;
-                                if (((MatrixDistance[i, k] >= distance) || MatrixDistance[i, k] == 0) && (k != i))
+                                if (MatrixDistance[j, k] > 0)
                                 {
-                                    MatrixDistance[i, k] = distance;
+                                    distance = MatrixDistance[j, k] + 1;
+                                    if (((MatrixDistance[i, k] >= distance) || MatrixDistance[i, k] == 0) && (k != i))
+                                    {
+                                        MatrixDistance[i, k] = distance;
+                                    }
                                 }
                             }
                         }
@@ -111,51 +117,57 @@ class Graph
         }
         return MatrixDistance;
     }
-    static void FindRDC(int[,] MatrixDistance, int[] V)
+    static void FindRDC(int[,] MatrixDistance, int[] V,char type)
     {
         int n = V.Length;
         int radius = n;
         int maxE;
         int diametr = 0;
-        Console.Write("C(G) - {");
-        for (int i = 0; i < MatrixDistance.GetLength(0); i++)
+        
+        
+            Console.Write("C - {");
+        if (type == '-')
         {
-            maxE = MatrixDistance[i, 0];
-            for (int j = 0; j < MatrixDistance.GetLength(1); j++)
+            for (int i = 0; i < MatrixDistance.GetLength(0); i++)
             {
-                if (diametr <= MatrixDistance[i, j])
+                maxE = MatrixDistance[i, 0];
+                for (int j = 0; j < MatrixDistance.GetLength(1); j++)
                 {
-                    diametr = MatrixDistance[i, j];
+                    if (diametr <= MatrixDistance[i, j])
+                    {
+                        diametr = MatrixDistance[i, j];
+                    }
+                    if (maxE < MatrixDistance[i, j])
+                    {
+                        maxE = MatrixDistance[i, j];
+                    }
                 }
-                if (maxE < MatrixDistance[i, j])
+                if (maxE < radius) { radius = maxE; }
+            }
+
+            for (int i = 0; i < MatrixDistance.GetLength(0); i++)
+            {
+
+                maxE = MatrixDistance[i, 0];
+                for (int j = 0; j < MatrixDistance.GetLength(1); j++)
                 {
-                    maxE = MatrixDistance[i, j];
+
+                    if (maxE < MatrixDistance[i, j])
+                    {
+                        maxE = MatrixDistance[i, j];
+                    }
+                }
+                if (radius == maxE)
+                {
+                    Console.Write(V[i] + " ");
                 }
             }
-            if (maxE < radius) { radius = maxE; }
         }
-
-        for (int i = 0; i < MatrixDistance.GetLength(0); i++)
-        {
-
-            maxE = MatrixDistance[i, 0];
-            for (int j = 0; j < MatrixDistance.GetLength(1); j++)
-            {
-
-                if (maxE < MatrixDistance[i, j])
-                {
-                    maxE = MatrixDistance[i, j];
-                }
-            }
-            if (radius == maxE)
-            {
-                Console.Write(V[i] + " ");
-            }
-        }
-        Console.Write("}");
+            Console.Write("}");
+        
         Console.WriteLine();
-        Console.WriteLine("D(G) = " + diametr);
-        Console.WriteLine("R(G) = " + radius);
+        Console.WriteLine("Diametr = " + diametr);
+        Console.WriteLine("Radius = " + radius);
 
     }
     static void WriteMatrix(string text, int[,] Matrix)
