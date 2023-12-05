@@ -36,14 +36,41 @@ class Graph
 
         WriteMatrix("Матриця сумiжностi", MatrixAdj);
 
-        int[,] MatrixDistance = CreateDistanceMatrix(MatrixAdj,type);
+        int[,] MatrixDistance = CreateDistanceMatrix(MatrixAdj, type);
 
-        FindRDC(MatrixDistance,V,type);
+        FindRDC(MatrixDistance, V, type);
 
         WriteMatrix("Матриця вiдстаней R", MatrixAdj);
 
         int[,] D = ReachabilityMatrix(MatrixAdj);
         WriteMatrix("Матриця досяжностi D", D);
+
+        // Рахуємо цикли
+
+        for (int i = 0; i < N; i++)
+        {
+            graph[i] = new List<int>();
+            cycles[i] = new List<int>();
+        }
+
+        for (int i = 0; i < Matrix.GetLength(0); i++)
+        {
+            addEdge(Matrix[i, 0], Matrix[i, 1]);
+        }
+
+        int[] color = new int[N];
+        int[] par = new int[N];
+
+        // Зберігаємо к-ть циклів
+
+        cyclenumber = 0;
+
+
+        dfs_cycle(1, 0, color, par);
+
+        // Виводимо цикли на консоль
+        Console.WriteLine("\n" + "Прості цикли");
+        printCycles();
 
         Console.ReadKey();
     }
@@ -86,7 +113,7 @@ class Graph
 
     static int[,] CreateDistanceMatrix(int[,] MatrixAdj, char type)
     {
-        
+
         int[,] MatrixDistance = MatrixAdj;
         int distance = 1;
         if (type == '-')
@@ -119,15 +146,15 @@ class Graph
         return MatrixDistance;
     }
 
-    static void FindRDC(int[,] MatrixDistance, int[] V,char type)
+    static void FindRDC(int[,] MatrixDistance, int[] V, char type)
     {
         int n = V.Length;
         int radius = n;
         int maxE;
         int diametr = 0;
         int length = 0;
-        int[]ArrCenter= new int[n];
-        
+        int[] ArrCenter = new int[n];
+
         Console.Write("C - {");
         if (type == '-')
         {
@@ -181,7 +208,7 @@ class Graph
 
 
 
-    
+
     static void WriteMatrix(string text, int[,] Matrix)
     {
         Console.WriteLine(text);
@@ -250,5 +277,85 @@ class Graph
             Array.Copy(result, term, result.Length);
         }
         return D;
+    }
+
+    static readonly int N = 100000;
+
+    // змінні для використання
+    // в обох функціях
+    static List<int>[] graph = new List<int>[N];
+    static List<int>[] cycles = new List<int>[N];
+    static int cyclenumber;
+
+    // Функція для позначення вершини
+    // різними кольорами для різних циклів
+    static void dfs_cycle(int u, int p, int[] color, int[] par)
+    {
+        // Вже (повністю) відвідана вершина.
+        if (color[u] == 2)
+        {
+            return;
+        }
+
+        // Знайдена вершина, але вона не була повністю відвідана -> цикл знайдено.
+        // відкотитися назад на основи батьківських вершин, щоб знайти повний цикл.
+        if (color[u] == 1)
+        {
+
+            List<int> v = new List<int>();
+            int cur = p;
+            v.Add(cur);
+
+            // Повернутись до вершини, яка знаходиться
+            // в поточному циклі, що знайшов її
+            while (cur != u)
+            {
+                cur = par[cur];
+                v.Add(cur);
+            }
+            cycles[cyclenumber] = v;
+            cyclenumber++;
+            return;
+        }
+        par[u] = p;
+
+        // Частково відвідані вершини
+        color[u] = 1;
+
+        // прості dfs на графі
+        foreach (int v in graph[u])
+        {
+            // Якщо вона не була відвідана раніше
+            if (v == par[u])
+            {
+                continue;
+            }
+            dfs_cycle(v, u, color, par);
+        }
+
+        // Повністю відвідані вершини
+        color[u] = 2;
+    }
+
+    // Додати ребра до графа 
+    static void addEdge(int u, int v)
+    {
+        graph[u].Add(v);
+        graph[v].Add(u);
+    }
+
+    // Функція для виведення циклів
+    static void printCycles()
+    {
+        // вивести всі вершини з одного і того самого циклу
+        for (int i = 0; i < cyclenumber; i++)
+        {
+            // Вивести i-й цикл
+            Console.Write("Цикл " + (i + 1) + ":");
+            foreach (int x in cycles[i])
+                Console.Write(" " + x);
+            Console.WriteLine();
+        }
+        Console.ReadKey();
     }
 }
