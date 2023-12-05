@@ -13,10 +13,8 @@ class Graph
         n = int.Parse(Console.ReadLine());
         Console.Write("Введiть кiлькiсть ребер m: ");
         m = int.Parse(Console.ReadLine());
-        Console.WriteLine("Граф орiєнтовний/неорiєнтовний? Напишiть:" +
-                "\n+ якщо граф орiєнтовний " +
-                "\n- якщо граф неорiєнтовний.");
-        char type = char.Parse(Console.ReadLine());
+        Console.WriteLine("Програма написана для неорiєнтованого графа");
+        char type = '-';
         Console.WriteLine("Введiть початкову та кiнцеву вершини через кому(приклад: 1, 2)");
 
         int[,] Matrix = new int[m, 2];
@@ -69,7 +67,7 @@ class Graph
         dfs_cycle(1, 0, color, par);
 
         // Виводимо цикли на консоль
-        Console.WriteLine("\n" + "Прості цикли");
+        Console.WriteLine("\n" + "Простi цикли");
         printCycles();
 
         Console.ReadKey();
@@ -155,7 +153,7 @@ class Graph
         int length = 0;
         int[] ArrCenter = new int[n];
 
-        Console.Write("C - {");
+        Console.Write("C - { ");
         if (type == '-')
         {
             for (int i = 0; i < MatrixDistance.GetLength(0); i++)
@@ -202,6 +200,27 @@ class Graph
         Console.WriteLine();
         Console.WriteLine("Diametr = " + diametr);
         Console.WriteLine("Radius = " + radius);
+        Console.WriteLine();
+
+        // Виводимо яруси для кожного центра
+        for (int c = 0; c < ArrCenter.Length; c++)
+        {
+            Console.Write($"Центр {ArrCenter[c]}: ");
+            for (int i = 1; i <= radius; i++)
+            {
+                Console.Write("\n");
+                Console.Write($"Ярус {i}: ");
+
+                for (int j = 0; j < MatrixDistance.GetLength(1); j++)
+                {
+                    if (i == MatrixDistance[ArrCenter[c] - 1, j]) 
+                    { 
+                        Console.Write($"{j+1} "); 
+                    }
+                }
+            }
+            Console.WriteLine();
+        }
         Console.WriteLine();
     }
 
