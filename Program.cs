@@ -83,6 +83,7 @@ class Graph
 
         return MatrixAdj;
     }
+
     static int[,] CreateDistanceMatrix(int[,] MatrixAdj, char type)
     {
         
@@ -117,15 +118,17 @@ class Graph
         }
         return MatrixDistance;
     }
+
     static void FindRDC(int[,] MatrixDistance, int[] V,char type)
     {
         int n = V.Length;
         int radius = n;
         int maxE;
         int diametr = 0;
+        int length = 0;
+        int[]ArrCenter= new int[n];
         
-        
-            Console.Write("C - {");
+        Console.Write("C - {");
         if (type == '-')
         {
             for (int i = 0; i < MatrixDistance.GetLength(0); i++)
@@ -159,17 +162,26 @@ class Graph
                 }
                 if (radius == maxE)
                 {
+                    ArrCenter[length] = V[i];
+                    length++;
                     Console.Write(V[i] + " ");
                 }
+
             }
         }
-            Console.Write("}");
-        
+
+        Array.Resize(ref ArrCenter, length);
+        Console.Write("}");
         Console.WriteLine();
         Console.WriteLine("Diametr = " + diametr);
         Console.WriteLine("Radius = " + radius);
-
+        Console.WriteLine();
     }
+
+
+
+
+    
     static void WriteMatrix(string text, int[,] Matrix)
     {
         Console.WriteLine(text);
