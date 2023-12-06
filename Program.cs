@@ -366,15 +366,23 @@ class Graph
     // Функція для виведення циклів
     static void printCycles()
     {
-        // вивести всі вершини з одного і того самого циклу
-        for (int i = 0; i < cyclenumber; i++)
+        if (cyclenumber > 0)
         {
-            // Вивести i-й цикл
-            Console.Write("Цикл " + (i + 1) + ":");
-            foreach (int x in cycles[i])
-                Console.Write(" " + x);
-            Console.WriteLine();
+            // вивести всі вершини з одного і того самого циклу
+            for (int i = 0; i < cyclenumber; i++)
+            {
+                // Вивести i-й цикл
+                Console.Write("Цикл " + (i + 1) + ":");
+                foreach (int x in cycles[i])
+                    Console.Write(" " + x);
+                Console.WriteLine();
+
+            }
+            Console.ReadKey();
         }
-        Console.ReadKey();
+        else
+        {
+            Console.WriteLine("Циклів не знайдено");
+        }
     }
 }
